@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TicTacToe</string>
+    <string name="reset">Reset</string>
+    <string name="error">Something went wrong, please try restarting the app.</string>
+    <string name="onewin">Player one won!</string>
+    <string name="twowin">Player two won!</string>
+    <string name="draw">It\'s a draw!</string>
 </resources>
