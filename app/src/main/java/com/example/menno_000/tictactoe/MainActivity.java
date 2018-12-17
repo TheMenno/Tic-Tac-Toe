@@ -37,6 +37,59 @@ public class MainActivity extends AppCompatActivity {
 
         // Find the TextView for the win message
         wintext = findViewById(R.id.wintext);
+
+        // Set up the listeners for the tiles
+        findViewById(R.id.button1).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button2).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button3).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button4).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button5).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button6).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button7).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button8).setOnClickListener(new MainActivity.TileListener());
+        findViewById(R.id.button9).setOnClickListener(new MainActivity.TileListener());
+
+        // Set up the listener for the reset button
+        findViewById(R.id.buttonr).setOnClickListener(new MainActivity.ResetListener());
+    }
+
+
+    // Listener for the tiles
+    public class TileListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+
+            tileClicked(view);
+        }
+    }
+
+
+    // Listener for the reset button
+    public class ResetListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+
+            resetClicked();
+        }
+    }
+
+
+    // Acts when a tile is clicked
+    public void tileClicked(View view) {
+
+        // Initialising variables
+        Button button = (Button) view;
+
+        // Retrieve the row and column of the chosen tile and fill the tile if needed
+        getRowColumn(button);
+        TileState state = game.choose(row, column);
+        setButtontext(state, button);
+
+        // Check if a player has won and end the game if someone did
+        GameState gstate = game.won();
+        gameFinished(gstate);
     }
 
 
@@ -47,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Store the game
         outState.putSerializable("game", game);
+
+        // Store the winner text
+        String win = (String) wintext.getText();
+        outState.putSerializable("wintext", win);
 
         // Check if the game has ended
         if (Game.gameOver) {
@@ -89,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         // (Re)Set the buttons
         Boolean enable = inState.getBoolean("enable");
         enableButtons(enable);
+
+        // Reset the winner text
+        String win = inState.getString("wintext");
+        wintext.setText(win);
     }
 
     // Takes input and writes the right text in a tile
@@ -104,22 +165,6 @@ public class MainActivity extends AppCompatActivity {
                 button.setText("O");
                 break;
         }
-    }
-
-    // Acts when a tile is clicked
-    public void tileClicked(View view) {
-
-        // Initialising variables
-        Button button = (Button) view;
-
-        // Retrieve the row and column of the chosen tile and fill the tile if needed
-        getRowColumn(button);
-        TileState state = game.choose(row, column);
-        setButtontext(state, button);
-
-        // Check if a player has won and end the game if someone did
-        GameState gstate = game.won();
-        gameFinished(gstate);
     }
 
 
@@ -226,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Reset the game when reset is clicked
-    public void resetClicked(View view) {
+    public void resetClicked() {
 
         // Reset buttons
         button1.setText("");
